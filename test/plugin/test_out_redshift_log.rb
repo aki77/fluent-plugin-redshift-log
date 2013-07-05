@@ -128,4 +128,23 @@ class RedshiftLogOutputTest < Test::Unit::TestCase
     assert_equal  'redshift.test', emits[0][0]
     assert_equal   "\tbar\t\tfoo", emits[0][2]['log']
   end
+
+  def test_emit_boolean_field
+    driver = create_driver(%[
+      add_tag_prefix redshift.
+      fields         field1,field2,field3
+    ])
+
+    driver.run do
+      driver.emit({ 'field1' => 'value1', 'field2' => true, 'field3' => false })
+    end
+    emits = driver.emits
+
+    assert_equal 1, emits.count
+
+    # ["redshift.test", 1372391656, {"log"=>"value1\ttrue\tfalse"}]]
+    assert_equal       'redshift.test', emits[0][0]
+    assert_equal "value1\ttrue\tfalse", emits[0][2]['log']
+  end
+
 end

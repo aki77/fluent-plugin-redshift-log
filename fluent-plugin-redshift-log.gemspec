@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = "fluent-plugin-redshift-log"
-  spec.version       = "0.0.1"
+  spec.version       = "0.0.2"
   spec.authors       = ["aki"]
   spec.email         = ["lala.akira@gmail.com"]
   spec.description   = %q{Amazon Redshift record log output plugin for Fluentd}

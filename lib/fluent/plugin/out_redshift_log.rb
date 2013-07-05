@@ -50,8 +50,8 @@ module Fluent
     def generate_log(record)
       val_list = @fields.collect do |field|
         val = record[field]
-        val = nil unless val and not val.to_s.empty?
-        val = JSON.generate(val) if val.kind_of?(Hash) or val.kind_of?(Array)
+        val = nil unless (val || val.kind_of?(FalseClass)) && !val.to_s.empty?
+        val = JSON.generate(val) if val.kind_of?(Hash) || val.kind_of?(Array)
         val = @timef.format(val) if val.kind_of?(Time)
         val.to_s unless val.nil?
       end
@@ -61,7 +61,7 @@ module Fluent
 
     def generate_log_with_delimiter(val_list, delimiter)
       val_list = val_list.collect do |val|
-        if val.nil? or val.empty?
+        if val.nil? || val.empty?
           ""
         else
           val.gsub(/\\/, "\\\\\\").gsub(/\t/, "\\\t").gsub(/\n/, "\\\n") # escape tab, newline and backslash
