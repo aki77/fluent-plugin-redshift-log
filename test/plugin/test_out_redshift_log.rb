@@ -99,16 +99,22 @@ class RedshiftLogOutputTest < Test::Unit::TestCase
     time = Time.parse("2013-06-12T00:00:00+09:00")
     created_at = Time.parse("2013-06-11T00:00:00+09:00")
 
+    time2 = Time.parse("2013-06-13T00:00:00+09:00")
+    created_at2 = Time.parse("2013-06-12T00:00:00+09:00")
+
     driver.run do
       driver.emit({ 'created_at' => created_at, 'hoge' => 'bar', 'fuga' => 'foo' }, time)
+      driver.emit({ 'created_at' => created_at2, 'hoge' => 'bar2', 'fuga' => 'foo2' }, time2)
     end
     emits = driver.emits
 
-    assert_equal 1, emits.count
+    assert_equal 2, emits.count
 
     # ["redshift.test", 1370962800, {"log"=>"2013-06-11 15:00:00\tbar\t2013-06-10 15:00:00"}]
     assert_equal                                 'redshift.test', emits[0][0]
     assert_equal "2013-06-11 15:00:00\tbar\t2013-06-10 15:00:00", emits[0][2]['log']
+    assert_equal                                 'redshift.test', emits[1][0]
+    assert_equal "2013-06-12 15:00:00\tbar2\t2013-06-11 15:00:00", emits[1][2]['log']
   end
 
   def test_emit_empty_field

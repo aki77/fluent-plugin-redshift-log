@@ -52,7 +52,7 @@ module Fluent
         val = record[field]
         val = nil unless (val || val.kind_of?(FalseClass)) && !val.to_s.empty?
         val = JSON.generate(val) if val.kind_of?(Hash) || val.kind_of?(Array)
-        val = @timef.format(val) if val.kind_of?(Time)
+        val = @timef.format_nocache(val) if val.kind_of?(Time)
         val.to_s unless val.nil?
       end
 
